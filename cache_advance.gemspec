@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.version = '1.0.2'
+  s.version = '1.0.3'
   s.date = %q{2009-01-08}
  
   s.name = %q{cache_advance}
