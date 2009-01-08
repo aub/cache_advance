@@ -1,4 +1,4 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 
-class CacheAdvanceTest < Test::Unit::TestCase
+class CacheSetTest < Test::Unit::TestCase
 end
