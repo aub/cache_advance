@@ -26,14 +26,16 @@ module CacheAdvance
       key = key_for(request, options[:key])
 
       if (cache = @cache.read(key))
-        call_plugins('after_read', key, request, cache)
+        each_plugin { |p| p.send('after_read', @name, key, request, cache) if p.respond_to?('after_read') }
         return cache
       end
-      
+
+      each_plugin { |p| p.send('before_render', @name, key, request) if p.respond_to?('before_render') }
       result = block.call
-      call_plugins('before_write', key, request, cache)
-      @cache.write(key, result, rails_options)      
-      call_plugins('after_write', key, request, cache)
+      each_plugin { |p| p.send('after_render', @name, key, request, result) if p.respond_to?('after_render') }
+      each_plugin { |p| p.send('before_write', @name, key, request, result) if p.respond_to?('before_write') }
+      @cache.write(key, result, rails_options)
+      each_plugin { |p| p.send('after_write', @name, key, request, result) if p.respond_to?('after_write') }
       
       add_to_cached_keys_list(key)
       
@@ -75,8 +77,10 @@ module CacheAdvance
     
     protected
         
-    def call_plugins(method, key, request, data)
-      @cache_set.plugins.each { |p| p.send(method, @name, key, request, data) if p.respond_to?(method) }
+    def each_plugin
+      @cache_set.plugins.each do |p|
+        yield p
+      end
     end
     
     def add_to_cached_keys_list(key)

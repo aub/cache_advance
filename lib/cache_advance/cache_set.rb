@@ -3,14 +3,11 @@ module CacheAdvance
     attr_reader :named_caches
     attr_reader :qualifiers
     attr_reader :plugins
-    attr_accessor :sweeper_type
-    attr_accessor :cache_type
     
     def initialize
       @named_caches = {}
       @qualifiers = {}
       @plugins = []
-      @cache = cache_type.new
     end
     
     def apply(cache_name, request, options, &block)
@@ -36,13 +33,21 @@ module CacheAdvance
     end
     
     def create_sweepers
-      sweeper_type.initialize_observed(@named_caches.values.map { |c| c.expiration_types }.flatten.compact.uniq)
+      @sweeper_type.initialize_observed(@named_caches.values.map { |c| c.expiration_types }.flatten.compact.uniq)
     end
     
     def expire_for_class(class_name)
       @named_caches.values.each do |named_cache|
         named_cache.expire_for(class_name)
       end
+    end
+    
+    def cache_type=(type)
+      @cache = type.new
+    end
+    
+    def sweeper_type=(type)
+      @sweeper_type = type
     end
   end
 end

@@ -1,6 +1,11 @@
 require 'cache_advance'
 require 'cache_advance/active_record_sweeper'
 require 'cache_advance/rails_cache'
+
+# Setup the sweeper and cache types as appropriate for Rails.
+CacheAdvance::Caches.sweeper_type = CacheAdvance::ActiveRecordSweeper
+CacheAdvance::Caches.cache_type = CacheAdvance::RailsCache
+
 require 'config/caches'
 require 'dispatcher'
 
@@ -15,11 +20,7 @@ end
 
 # This will get called after the standard rails environment is initialized.
 config.after_initialize do
-  
-  # Setup the sweeper and cache types as appropriate for Rails.
-  CacheAdvance::Caches.sweeper_type = CacheAdvance::ActiveRecordSweeper
-  CacheAdvance::Caches.cache_type = CacheAdvance::RailsCache
-  
+    
   # This hooks the sweepers into the observer system and adds it to the list. 
   CacheAdvance::Caches.create_sweepers
   ActiveRecord::Base.observers << CacheAdvance::ActiveRecordSweeper
