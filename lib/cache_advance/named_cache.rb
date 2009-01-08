@@ -1,4 +1,4 @@
-module CacheAdvance
+module CacheAdvance  
   class NamedCache
     STORED_KEY = 'STORED_CACHES'
     

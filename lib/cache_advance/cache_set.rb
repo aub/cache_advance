@@ -14,6 +14,7 @@ module CacheAdvance
     
     def apply(cache_name, request, options, &block)
       cache = @named_caches[cache_name]
+      raise UnknownNamedCacheException if cache.nil?
       cache.value_for(request, options, &block)
     end
     

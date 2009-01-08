@@ -20,6 +20,6 @@ config.after_initialize do
   ActiveRecord::Base.observers << CacheAdvance::ActiveRecordObserver
   
   ActionController::Dispatcher.to_prepare(:cache_advance_reload) do
-    CacheAdvance::ActiveRecordObserver.instance.reload_observer
+    CacheAdvance::ActiveRecordSweeper.instance.reload_sweeper
   end
 end

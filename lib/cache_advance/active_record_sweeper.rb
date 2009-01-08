@@ -1,12 +1,16 @@
+require 'rubygems'
+gem 'activerecord'
+require 'active_record'
+
 module CacheAdvance
-  class ActiveRecordObserver < ActiveRecord::Observer
+  class ActiveRecordSweeper < ::ActiveRecord::Observer
 
     def self.initialize_observed(classes)
       observe(classes)
     end
 
-    def reload_observer
-      Set.new(observed_classes + observed_subclasses).each do |klass| 
+    def reload_sweeper
+      observed_classes.each do |klass| 
         klass.name.constantize.add_observer(self)
       end
     end
