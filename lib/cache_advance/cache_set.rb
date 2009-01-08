@@ -3,7 +3,7 @@ module CacheAdvance
     attr_reader :named_caches
     attr_reader :qualifiers
     attr_reader :plugins
-    attr_accessor :observer_type
+    attr_accessor :sweeper_type
     attr_accessor :cache
     
     def initialize
@@ -35,7 +35,7 @@ module CacheAdvance
     end
     
     def create_sweepers
-      observer_type.initialize_observed(@named_caches.values.map { |c| c.expiration_types }.flatten.compact.uniq)
+      sweeper_type.initialize_observed(@named_caches.values.map { |c| c.expiration_types }.flatten.compact.uniq)
     end
     
     def expire_for_class(class_name)

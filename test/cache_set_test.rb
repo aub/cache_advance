@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 
 class Plugin; end
 
-require 'cache_advance/active_record_observer'
+require 'cache_advance/active_record_sweeper'
 
 class CacheSetTest < Test::Unit::TestCase
   def setup
@@ -30,10 +30,10 @@ class CacheSetTest < Test::Unit::TestCase
   end
   
   def test_should_pass_expiration_types_to_the_sweeper
-    @cache_set.observer_type = CacheAdvance::ActiveRecordObserver
+    @cache_set.sweeper_type = CacheAdvance::ActiveRecordSweeper
     @cache_set.add_named_cache(:kewl, { :expiration_types => [:publication, :article] })
     @cache_set.add_named_cache(:howza, { :expiration_types => [:publication] })
-    CacheAdvance::ActiveRecordObserver.expects(:initialize_observed).with([:publication, :article])
+    CacheAdvance::ActiveRecordSweeper.expects(:initialize_observed).with([:publication, :article])
     @cache_set.create_sweepers
   end
 end

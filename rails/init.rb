@@ -1,5 +1,5 @@
 require 'cache_advance'
-require 'cache_advance/active_record_observer'
+require 'cache_advance/active_record_sweeper'
 require 'cache_advance/rails_cache'
 require 'config/caches'
 require 'dispatcher'
@@ -13,11 +13,11 @@ ActionController::Base.helper do
 end
 
 config.after_initialize do
-  CacheAdvance::Caches.observer_type = CacheAdvance::ActiveRecordObserver
+  CacheAdvance::Caches.sweeper_type = CacheAdvance::ActiveRecordSweeper
   CacheAdvance::Caches.cache = CacheAdvance::RailsCache.new
   
   CacheAdvance::Caches.create_sweepers
-  ActiveRecord::Base.observers << CacheAdvance::ActiveRecordObserver
+  ActiveRecord::Base.observers << CacheAdvance::ActiveRecordSweeper
   
   ActionController::Dispatcher.to_prepare(:cache_advance_reload) do
     CacheAdvance::ActiveRecordSweeper.instance.reload_sweeper
