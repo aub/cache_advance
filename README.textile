@@ -1,0 +1,47 @@
+h1. cache advance
+
+CacheAdvance is a wrapper around the Rails caching system that provides a simple, centralized
+configuration file for defining caches and an even simpler way to apply them.
+
+Written by "Aubrey Holland":mailto:aubreyholland@gmail.com.
+
+h3. download
+
+Github: "Page":http://github.com/aub/cache_advance/tree/master
+
+Gem: <pre>gem install aub-cache_advance --source http://gems.github.com</pre>
+
+Note: if you install using the gem from Github, you'll need this
+in your environment.rb if you want to use Rails 2.1's dependency manager:
+
+<pre><code>
+config.gem 'aub-cache_advance', :lib => 'cache_advance', :source => 'http://gems.github.com'
+</code></pre>
+
+h3. cache definition
+
+Caches are defined in the file config/caches.rb, which will be loaded automatically by the gem.
+This file is similar in format to the rails routes config file, allowing you to specify named
+caches and configure their keys and how they will be expired.
+
+<pre><code>
+CacheAdvance::Caches.define_caches do |config|
+
+  config.qualifier(:params) do |request|
+    request.params
+  end
+
+  config.plugin :template_handler_observer_cache_plugin
+
+  config.content_block :expiration_time => 10.minutes, :qualifiers => [ :subdomain, :params ]
+
+  config.change_towns_all :expiration_types => [ :publication ]
+  config.change_towns_limited :expiration_types => [ :publication ]
+
+  config.publication_twitter_update :expiration_time => 10.minutes, :qualifiers => [ :subdomain ]
+
+  config.weather_widget :expiration_time => 10.minutes, :qualifiers => [ :subdomain ]
+end
+</code></pre>
+
+..............More later.
