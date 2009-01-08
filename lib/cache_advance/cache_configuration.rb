@@ -3,6 +3,7 @@ module Patch
     class CacheConfiguration
       attr_reader :caches
       attr_accessor :qualifiers
+      attr_accessor :plugins
       
       class << self
         attr_accessor :observer_type
@@ -11,6 +12,7 @@ module Patch
       def initialize
         @caches = {}
         @qualifiers = {}
+        @plugins = []
       end
       
       def apply(cache_name, request, options, &block)
@@ -19,7 +21,17 @@ module Patch
       end
       
       def qualifier(name, &proc)
-        @qualifiers[:name] = proc
+        @qualifiers[name] = proc
+      end
+      
+      def plugin(name)
+        if name.is_a?(Symbol)
+          @plugins << name.to_s.camelcase.constantize.new
+        elsif name.is_a?(Class)
+          @plugins << name.new
+        else
+          @plugins << name
+        end
       end
       
       def method_missing(method, options={}, &block)

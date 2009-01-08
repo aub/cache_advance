@@ -1,6 +1,8 @@
 module Patch
   module CacheAdvance
     class Cache
+      STORED_KEY = 'STORED_CACHES'
+      
       def initialize(name, params, configuration)
         @name = name.to_s
         @params = params
@@ -10,30 +12,36 @@ module Patch
       def key_for(request, suffix='')
         key = @name.dup
         key << suffix.to_s
-        
-        @configuration.qualifiers[@name].each do |q| 
-          this_one = q.call(request)
-          key << this_one.to_s unless this_one.nil?
-        end if @configuration.qualifiers[@name]
+                
+        @params[:qualifiers].each do |q|
+          if (qualifier = @configuration.qualifiers[q])
+            this_one = qualifier.call(request)
+            key << this_one.to_s unless this_one.nil?
+          end
+        end if @params[:qualifiers]
         key
       end
       
       def value_for(request, options, &block)
         key = key_for(request, options[:key])
 
-        if (cached = Rails.cache.read(key))
-          return cached
+        if (cache = Rails.cache.read(key))
+          call_plugins('after_read', key, request)
+          return cache
         end
-
+        
+        call_plugins('before_write', key, request)
+        
         result = block.call
         
         Rails.cache.write(key, result, rails_options)
         
-        if key != @name
-          # I can write to memcached the list of things that are in it for a given cache.
-          # Then, if the cache depends on the params, I can read the caches it has and invalidate
-          # them if a cache invalidates based on changes to objects
+        call_plugins('after_write', key, request)
+        
+        if key != @name # AND IT EXPIRES BY TYPE!!!!!!
+          # stored = Rails.cache.read
         end
+        
         result
       end
       
@@ -55,6 +63,12 @@ module Patch
       
       def expiration_types
         @params[:expiration_types]
+      end
+      
+      protected
+      
+      def call_plugins(method, key, request)
+        @configuration.plugins.each { |p| p.send(method, @name, key, request) if p.respond_to?(method) }
       end
     end
   end
