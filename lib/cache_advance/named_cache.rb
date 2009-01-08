@@ -2,10 +2,10 @@ module CacheAdvance
   class NamedCache
     STORED_KEY = 'STORED_CACHES'
     
-    def initialize(name, params, configuration, cache)
+    def initialize(name, params, cache_set, cache)
       @name = name.to_s
       @params = params
-      @configuration = configuration
+      @cache_set = cache_set
       @cache = cache
     end
     
@@ -14,7 +14,7 @@ module CacheAdvance
       key << suffix.to_s
               
       qualifiers.each do |q|
-        if (qualifier = @configuration.qualifiers[q])
+        if (qualifier = @cache_set.qualifiers[q])
           this_one = qualifier.call(request)
           key << this_one.to_s unless this_one.nil?
         end
@@ -76,7 +76,7 @@ module CacheAdvance
     protected
         
     def call_plugins(method, key, request)
-      @configuration.plugins.each { |p| p.send(method, @name, key, request) if p.respond_to?(method) }
+      @cache_set.plugins.each { |p| p.send(method, @name, key, request) if p.respond_to?(method) }
     end
     
     def add_to_cached_keys_list(key)

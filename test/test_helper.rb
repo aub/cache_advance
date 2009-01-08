@@ -7,3 +7,4 @@ require 'ruby-debug'
 
 require 'cache_advance'
 require 'mocha'
+require 'cache_mock'
