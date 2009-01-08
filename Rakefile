@@ -29,6 +29,7 @@ spec = Gem::Specification.new do |s|
   s.version     = "1.0.0"
   s.summary     = %q{A system for spiffy declarative caching}
   s.description = %q{A system for spiffy declarative caching}
+  s.homepage    = 'http://github.com/aub/cache_advance'
 
   s.files        = FileList['[A-Z]*', 'lib/**/*.rb', 'rails/**/*.rb', 'test/**/*.rb']
   s.require_path = 'lib'
