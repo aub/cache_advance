@@ -16,9 +16,9 @@ end
 # This will get called after the standard rails environment is initialized.
 config.after_initialize do
   
-  # Setup the sweeper_type and cache as appropriate for Rails.
+  # Setup the sweeper and cache types as appropriate for Rails.
   CacheAdvance::Caches.sweeper_type = CacheAdvance::ActiveRecordSweeper
-  CacheAdvance::Caches.cache = CacheAdvance::RailsCache.new
+  CacheAdvance::Caches.cache_type = CacheAdvance::RailsCache
   
   # This hooks the sweepers into the observer system and adds it to the list. 
   CacheAdvance::Caches.create_sweepers

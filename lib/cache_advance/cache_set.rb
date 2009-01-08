@@ -4,18 +4,19 @@ module CacheAdvance
     attr_reader :qualifiers
     attr_reader :plugins
     attr_accessor :sweeper_type
-    attr_accessor :cache
+    attr_accessor :cache_type
     
     def initialize
       @named_caches = {}
       @qualifiers = {}
       @plugins = []
+      @cache = cache_type.new
     end
     
     def apply(cache_name, request, options, &block)
-      cache = @named_caches[cache_name]
-      raise UnknownNamedCacheException if cache.nil?
-      cache.value_for(request, options, &block)
+      named_cache = @named_caches[cache_name]
+      raise UnknownNamedCacheException if named_cache.nil?
+      named_cache.value_for(request, options, &block)
     end
     
     def add_qualifier(name, proc)
@@ -27,7 +28,7 @@ module CacheAdvance
     end
     
     def add_named_cache(name, options)
-      @named_caches[name] = NamedCache.new(name, options, self, cache)
+      @named_caches[name] = NamedCache.new(name, options, self, @cache)
     end
     
     def define_caches
@@ -39,8 +40,8 @@ module CacheAdvance
     end
     
     def expire_for_class(class_name)
-      @named_caches.values.each do |cache|
-        cache.expire_for(class_name)
+      @named_caches.values.each do |named_cache|
+        named_cache.expire_for(class_name)
       end
     end
   end
