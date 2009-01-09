@@ -10,10 +10,19 @@ require 'config/caches'
 require 'dispatcher'
 
 # This is the helper method that can be used in rails views/controllers/helpers.
-ActionController::Base.helper do  
-  def cache_it(cache, options={}, &block)
-    CacheAdvance::Caches.apply(cache, request, options) do
-      capture(&block)
+# If caching is disabled, just make it yield the results of the block.
+if config.action_controller.perform_caching
+  ActionController::Base.helper do
+    def cache_it(cache, options={}, &block)
+      CacheAdvance::Caches.apply(cache, request, options) do
+        capture(&block)
+      end
+    end
+  end
+else
+  ActionController::Base.helper do
+    def cache_it(cache, options={})
+      yield
     end
   end
 end
