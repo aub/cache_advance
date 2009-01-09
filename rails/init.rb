@@ -6,7 +6,7 @@ require 'cache_advance/rails_cache'
 CacheAdvance::Caches.sweeper_type = CacheAdvance::ActiveRecordSweeper
 CacheAdvance::Caches.cache_type = CacheAdvance::RailsCache
 
-require 'config/caches'
+require "#{RAILS_ROOT}/config/caches"
 require 'dispatcher'
 
 # This is the helper method that can be used in rails views/controllers/helpers.
