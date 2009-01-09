@@ -18,6 +18,12 @@ ActionController::Base.helper do
   end
 end
 
+ActionMailer::Base.helper do  
+  def cache_it(cache, options={})
+    yield
+  end
+end
+
 # This will get called after the standard rails environment is initialized.
 config.after_initialize do
     
