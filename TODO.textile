@@ -1,0 +1,6 @@
+- Fix to allow keys of > 256 characters with memcache
+- Make test coverage not pitiful
+- Add ability for cache to expire when a specific object changes
+- Apply plugins only to specific caches
+- Test with caching strategies other than memcache
+- Improve documentation
