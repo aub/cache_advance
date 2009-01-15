@@ -35,14 +35,15 @@ end
 
 # This will get called after the standard rails environment is initialized.
 config.after_initialize do
+  if config.action_controller.perform_caching
+    # This hooks the sweepers into the observer system and adds it to the list.
+    CacheAdvance::Caches.create_sweepers
+    ActiveRecord::Base.observers << CacheAdvance::ActiveRecordSweeper
 
-  # This hooks the sweepers into the observer system and adds it to the list.
-  CacheAdvance::Caches.create_sweepers
-  ActiveRecord::Base.observers << CacheAdvance::ActiveRecordSweeper
-
-  # In development mode, the models we observe get reloaded with each request. Using
-  # this hook allows us to reload the observer relationships each time as well.
-  ActionController::Dispatcher.to_prepare(:cache_advance_reload) do
-    CacheAdvance::ActiveRecordSweeper.instance.reload_sweeper
+    # In development mode, the models we observe get reloaded with each request. Using
+    # this hook allows us to reload the observer relationships each time as well.
+    ActionController::Dispatcher.to_prepare(:cache_advance_reload) do
+      CacheAdvance::ActiveRecordSweeper.instance.reload_sweeper
+    end
   end
 end
