@@ -15,7 +15,7 @@ module CacheAdvance
               
       key << qualifiers.map do |q|
         if (qualifier = @cache_set.qualifiers[q])
-          (qualifier.bind(self).call(request) || '').to_s
+          (qualifier.call(request) || '').to_s
         end
       end.join('')
       key
@@ -30,7 +30,7 @@ module CacheAdvance
       end
       
       each_plugin { |p| p.send('before_render', @name, key, request) if p.respond_to?('before_render') }
-      result = block.bind(self).call
+      result = block.call
       each_plugin { |p| p.send('after_render', @name, key, request, result) if p.respond_to?('after_render') }
       each_plugin { |p| p.send('before_write', @name, key, request, result) if p.respond_to?('before_write') }
       @cache.write(key, result, rails_options)
