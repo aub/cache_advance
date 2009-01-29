@@ -13,25 +13,24 @@ module CacheAdvance
       key = @name.dup
       key << suffix.to_s
               
-      qualifiers.each do |q|
+      key << qualifiers.map do |q|
         if (qualifier = @cache_set.qualifiers[q])
-          this_one = qualifier.call(request)
-          key << this_one.to_s unless this_one.nil?
+          (qualifier.bind(self).call(request) || '').to_s
         end
-      end if qualifiers
+      end.join('')
       key
     end
     
     def value_for(request, options, &block)
       key = key_for(request, options[:key])
-
+      
       if (cache = @cache.read(key))
         each_plugin { |p| p.send('after_read', @name, key, request, cache) if p.respond_to?('after_read') }
         return cache
       end
-
+      
       each_plugin { |p| p.send('before_render', @name, key, request) if p.respond_to?('before_render') }
-      result = block.call
+      result = block.bind(self).call
       each_plugin { |p| p.send('after_render', @name, key, request, result) if p.respond_to?('after_render') }
       each_plugin { |p| p.send('before_write', @name, key, request, result) if p.respond_to?('before_write') }
       @cache.write(key, result, rails_options)
