@@ -7,28 +7,14 @@ require 'dispatcher'
 # Setup the sweeper and cache types as appropriate for Rails.
 CacheAdvance.cache_set.sweeper_type = CacheAdvance::ActiveRecordSweeper
 
-# This is the helper method that can be used in rails views/controllers/helpers.
-# If caching is disabled, just make it yield the results of the block.
-if config.action_controller.perform_caching
-  ActionController::Base.helper do
-    def cache_it(cache, options={}, &block)
-      CacheAdvance.cache_set.apply(cache, request, options) do
-        capture(&block)
-      end
-    end
-  end
-else
-  ActionController::Base.helper do
-    def cache_it(cache, options={}, &block)
-      capture(&block)
-    end
-  end
+CacheAdvance.caching_enabled = config.action_controller.perform_caching
+
+class ActionController::Base
+  include CacheAdvance::ActionControllerMixin
 end
 
-ActionMailer::Base.helper do
-  def cache_it(cache, options={}, &block)
-    capture(&block)
-  end
+class ActionMailer::Base
+  include CacheAdvance::ActionMailerMixin
 end
 
 # This will get called after the standard rails environment is initialized.

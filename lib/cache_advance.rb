@@ -9,7 +9,11 @@ module CacheAdvance
 
   class << self
     attr_reader :cache_set
+    attr_accessor :caching_enabled
   end
+
+  @cache_set = nil
+  @caching_enabled = true
 
   def self.define_caches(store)
     @cache_set = CacheSet.new(store)

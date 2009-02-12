@@ -13,9 +13,13 @@ module CacheAdvance
     end
     
     def apply(cache_name, request, options, &block)
-      named_cache = @named_caches[cache_name]
-      raise UnknownNamedCacheException if named_cache.nil?
-      named_cache.value_for(request, options, &block)
+      if CacheAdvance.caching_enabled
+        named_cache = @named_caches[cache_name]
+        raise UnknownNamedCacheException if named_cache.nil?
+        named_cache.value_for(request, options, &block)
+      else
+        block.call
+      end
     end
     
     def add_qualifier(name, proc)
