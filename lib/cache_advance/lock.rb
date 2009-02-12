@@ -1,5 +1,7 @@
 module CacheAdvance
   class Lock
+
+    class LockAcquisitionFailureException < Exception; end
     
     DEFAULT_RETRIES = 5
     DEFAULT_EXPIRATION_TIME = 30
@@ -20,13 +22,11 @@ module CacheAdvance
     def acquire(key, lock_expiry = DEFAULT_EXPIRATION_TIME, retries = DEFAULT_RETRIES)
       retries.times do |count|
         begin
-          response = @store.set("lock/#{key}", Process.pid, lock_expiry)
-          return if response == "STORED\r\n"
-          raise Error if count == retries - 1
+          return if @store.set("lock/#{key}", Process.pid, lock_expiry) == "STORED\r\n"
         end
         exponential_sleep(count) unless count == retries - 1
       end
-      raise Error, "Couldn't acquire memcache lock for: #{key}"
+      raise LockAcquisitionFailureException, "Couldn't acquire memcache lock for: #{key}"
     end
 
     def release_lock(key)

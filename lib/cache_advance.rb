@@ -16,6 +16,4 @@ module CacheAdvance
     yield Mapper.new(@cache_set)
     @cache_set.setup_complete # This allows the cache set to finalize some of its configuration
   end
-
-  # Caches = CacheSet.new
 end
