@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors = ['Aubrey Holland']
   s.description = %q{A system for spiffy declarative caching}
   s.email = %q{aubrey@patch.com}
-  s.files = %w(cache_advance.gemspec lib/cache_advance/active_record_sweeper.rb lib/cache_advance/cache_set.rb lib/cache_advance/mapper.rb lib/cache_advance/named_cache.rb lib/cache_advance/rails_cache.rb lib/cache_advance.rb rails/init.rb Rakefile README.textile test/active_record_sweeper_test.rb test/cache_mock.rb test/cache_set_test.rb test/mapper_test.rb test/named_cache_test.rb test/rails_cache_test.rb test/test_helper.rb TODO.textile)
+  s.files = %w(cache_advance.gemspec lib/cache_advance/lock.rb lib/cache_advance/active_record_sweeper.rb lib/cache_advance/named_cache_configuration.rb lib/cache_advance/cached_key_list.rb lib/cache_advance/cache_set.rb lib/cache_advance/mapper.rb lib/cache_advance/named_cache.rb lib/cache_advance.rb rails/init.rb Rakefile README.textile test/active_record_sweeper_test.rb test/cache_mock.rb test/cache_set_test.rb test/mapper_test.rb test/named_cache_test.rb test/rails_cache_test.rb test/test_helper.rb TODO.textile)
   s.homepage = %q{http://github.com/aub/cache_advance}
   s.require_paths = ['lib']
   s.rubygems_version = %q{1.2.0}

@@ -1,20 +1,18 @@
 require 'cache_advance'
 require 'cache_advance/active_record_sweeper'
-require 'cache_advance/rails_cache'
-
-# Setup the sweeper and cache types as appropriate for Rails.
-CacheAdvance::Caches.sweeper_type = CacheAdvance::ActiveRecordSweeper
-CacheAdvance::Caches.cache_type = CacheAdvance::RailsCache
 
 require "#{RAILS_ROOT}/config/caches"
 require 'dispatcher'
+
+# Setup the sweeper and cache types as appropriate for Rails.
+CacheAdvance.cache_set.sweeper_type = CacheAdvance::ActiveRecordSweeper
 
 # This is the helper method that can be used in rails views/controllers/helpers.
 # If caching is disabled, just make it yield the results of the block.
 if config.action_controller.perform_caching
   ActionController::Base.helper do
     def cache_it(cache, options={}, &block)
-      CacheAdvance::Caches.apply(cache, request, options) do
+      CacheAdvance.cache_set.apply(cache, request, options) do
         capture(&block)
       end
     end
@@ -37,7 +35,7 @@ end
 config.after_initialize do
   if config.action_controller.perform_caching
     # This hooks the sweepers into the observer system and adds it to the list.
-    CacheAdvance::Caches.create_sweepers
+    CacheAdvance.cache_set.create_sweepers
     ActiveRecord::Base.observers << CacheAdvance::ActiveRecordSweeper
 
     # In development mode, the models we observe get reloaded with each request. Using

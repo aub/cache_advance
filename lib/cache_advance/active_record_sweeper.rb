@@ -26,7 +26,7 @@ module CacheAdvance
     
     def expire_caches_for(object)
       class_symbol = object.class.name.underscore.to_sym
-      CacheAdvance::Caches.expire_for_class(class_symbol)
+      CacheAdvance.cache_set.expire_for_class(class_symbol)
     end
   end
 end

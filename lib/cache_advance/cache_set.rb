@@ -4,10 +4,12 @@ module CacheAdvance
     attr_reader :qualifiers
     attr_reader :plugins
     
-    def initialize
-      @named_caches = {}
-      @qualifiers = {}
-      @plugins = []
+    def initialize(store)
+      @store, @named_caches, @qualifiers, @plugins = store, {}, {}, []
+    end
+    
+    def setup_complete
+      
     end
     
     def apply(cache_name, request, options, &block)
@@ -25,7 +27,7 @@ module CacheAdvance
     end
     
     def add_named_cache(name, options)
-      @named_caches[name] = NamedCache.new(name, options, self, @cache)
+      @named_caches[name] = NamedCache.new(name, options, self, @store)
     end
     
     def define_caches
@@ -40,10 +42,6 @@ module CacheAdvance
       @named_caches.values.each do |named_cache|
         named_cache.expire_for(class_name)
       end
-    end
-    
-    def cache_type=(type)
-      @cache = type.new
     end
     
     def sweeper_type=(type)
