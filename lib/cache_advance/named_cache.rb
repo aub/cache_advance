@@ -56,7 +56,7 @@ module CacheAdvance
     
     def enabled=(state)
       @enabled = !!state
-      write_to_store(enabled_key, @enabled, false)
+      @store.set(enabled_key, @enabled)
     end
     
     def enabled?

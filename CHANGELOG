@@ -1,0 +1,3 @@
+1.1.1
+
+  * Fixed a bug where the enabled flag would expire, causing caches to be reenabled.
