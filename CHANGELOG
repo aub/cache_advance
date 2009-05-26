@@ -1,3 +1,8 @@
+1.1.2
+
+	* Strip whitespace from keys in order to avoid errors from memcache.
+	* Symbolize cache names.
+
 1.1.1
 
   * Fixed a bug where the enabled flag would expire, causing caches to be reenabled.
