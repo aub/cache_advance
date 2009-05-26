@@ -34,7 +34,7 @@ module CacheAdvance
     end
 
     def exponential_sleep(count)
-      @runtime += Benchmark::measure { sleep((2**count) / 10.0) }
+      sleep((2**count) / 10.0)
     end
   end
 end

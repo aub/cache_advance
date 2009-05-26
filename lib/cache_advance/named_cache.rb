@@ -102,7 +102,7 @@ module CacheAdvance
           (qualifier.call(request) || '').to_s
         end
       end.join('/')
-      "#{@name}/#{suffix}/[#{qualifier_data}]"
+      "#{@name}/#{suffix}/[#{qualifier_data}]".gsub(/\s/, '')
     end
         
     def enabled_key

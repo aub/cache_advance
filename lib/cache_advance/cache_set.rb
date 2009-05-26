@@ -13,6 +13,7 @@ module CacheAdvance
     end
     
     def apply(cache_name, request, options, &block)
+      cache_name = cache_name.to_sym
       if CacheAdvance.caching_enabled
         named_cache = @named_caches[cache_name]
         raise UnknownNamedCacheException if named_cache.nil?
@@ -31,6 +32,7 @@ module CacheAdvance
     end
     
     def add_named_cache(name, options)
+      name = name.to_sym
       @named_caches[name] = NamedCache.new(name, options, self, @store)
     end
     

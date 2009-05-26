@@ -1,8 +1,6 @@
-require 'cache_advance/cache_set'
-require 'cache_advance/cached_key_list'
-require 'cache_advance/mapper'
-require 'cache_advance/named_cache'
-require 'cache_advance/named_cache_configuration'
+%w( cache_set cached_key_list lock mapper named_cache named_cache_configuration).each do |file|
+  require File.join(File.dirname(__FILE__), 'cache_advance', file)
+end
 
 module CacheAdvance
   class UnknownNamedCacheException < Exception; end
