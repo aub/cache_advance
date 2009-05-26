@@ -1,3 +1,6 @@
+gem 'activesupport'
+require 'active_support/core_ext'
+
 module CacheAdvance
   class Mapper
     def initialize(cache_set)

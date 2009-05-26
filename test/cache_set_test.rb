@@ -6,7 +6,8 @@ require 'cache_advance/active_record_sweeper'
 
 class CacheSetTest < Test::Unit::TestCase
   def setup
-    @cache_set = CacheAdvance::CacheSet.new
+    @cache = CacheAdvance::CacheMock.new
+    @cache_set = CacheAdvance::CacheSet.new(@cache)
   end
   
   def test_define_caches_should_yield_a_mapper

@@ -6,7 +6,8 @@ end
 class MapperTest < Test::Unit::TestCase
   
   def setup
-    @cache_set = CacheAdvance::CacheSet.new
+    @cache = CacheAdvance::CacheMock.new
+    @cache_set = CacheAdvance::CacheSet.new(@cache)
     @mapper = CacheAdvance::Mapper.new(@cache_set)
   end
   

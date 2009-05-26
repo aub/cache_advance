@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper.rb'
+require File.join(File.dirname(__FILE__), 'test_helper.rb')
 
 require 'cache_advance/active_record_sweeper'
 
@@ -24,7 +24,7 @@ class ActiveRecordSweeperTest < Test::Unit::TestCase
   end
   
   def test_should_expire_caches_on_changes
-    CacheAdvance::Caches.expects(:expire_for_class).with(:publication).times(3)
+    CacheAdvance.cache_set.expects(:expire_for_class).with(:publication).times(3)
     %w(after_create after_update after_destroy).each do |method|
       @sweeper.send(method, Publication.new)
     end

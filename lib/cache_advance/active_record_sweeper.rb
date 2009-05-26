@@ -1,6 +1,6 @@
 require 'rubygems'
 gem 'activerecord'
-require 'active_record'
+require 'active_record/observer'
 
 module CacheAdvance
   class ActiveRecordSweeper < ::ActiveRecord::Observer
