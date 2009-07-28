@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cache_advance}
-  s.version = "1.1.2"
+  s.version = "1.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aubrey Holland"]
-  s.date = %q{2009-05-26}
+  s.date = %q{2009-07-28}
   s.description = %q{hmm}
   s.email = %q{aubreyholland@gmail.com}
   s.extra_rdoc_files = [
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "TODO.textile",
      "VERSION",
+     "cache_advance.gemspec",
      "lib/cache_advance.rb",
      "lib/cache_advance/active_record_sweeper.rb",
      "lib/cache_advance/cache_set.rb",
@@ -28,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/cache_advance/named_cache.rb",
      "lib/cache_advance/named_cache_configuration.rb",
      "rails/init.rb",
+     "script/console",
      "test/active_record_sweeper_test.rb",
      "test/cache_mock.rb",
      "test/cache_set_test.rb",

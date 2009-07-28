@@ -19,16 +19,16 @@ module CacheAdvance
       key = key_for(request, options[:key])
       
       if (value = read_from_store(key))
-        each_plugin { |p| p.send('after_read', @name, key, request, value) if p.respond_to?('after_read') }
+        each_plugin { |p| p.send('after_read', @name, key, value, options) if p.respond_to?('after_read') }
         return value
       end
       
-      each_plugin { |p| p.send('before_render', @name, key, request) if p.respond_to?('before_render') }
+      each_plugin { |p| p.send('before_render', @name, key, options) if p.respond_to?('before_render') }
       result = block.call
-      each_plugin { |p| p.send('after_render', @name, key, request, result) if p.respond_to?('after_render') }
-      each_plugin { |p| p.send('before_write', @name, key, request, result) if p.respond_to?('before_write') }
+      each_plugin { |p| p.send('after_render', @name, key, result, options) if p.respond_to?('after_render') }
+      each_plugin { |p| p.send('before_write', @name, key, result, options) if p.respond_to?('before_write') }
       write_to_store(key, result)
-      each_plugin { |p| p.send('after_write', @name, key, request, result) if p.respond_to?('after_write') }      
+      each_plugin { |p| p.send('after_write', @name, key, result, options) if p.respond_to?('after_write') }      
       result
     end
         

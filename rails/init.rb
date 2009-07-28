@@ -14,6 +14,9 @@ CacheAdvance.caching_enabled = config.action_controller.perform_caching
 if config.action_controller.perform_caching
   ActionController::Base.helper do
     def cache_it(cache, options={}, &block)
+      CacheAdvance.cache_set.plugins.each do |plugin|
+        options.merge!(plugin.cache_it_options(self)) if plugin.respond_to?('cache_it_options')
+      end
       CacheAdvance.cache_set.apply(cache, request, options) do
         capture(&block)
       end
