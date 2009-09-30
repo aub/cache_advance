@@ -61,7 +61,7 @@ module CacheAdvance
     
     def enabled?
       if @enabled.nil? || Time.now >= @enabled_check_time
-        @enabled = [nil, true].include?(read_from_store(enabled_key))
+        @enabled = [nil, true].include?(read_from_store(enabled_key, false))
         @enabled_check_time = Time.now + ENABLED_CHECK_INTERVAL
       end
       @enabled
@@ -69,15 +69,19 @@ module CacheAdvance
     
     protected
         
-    def read_from_store(key)
-      @store.get(key)
-    end
-    
-    def write_to_store(key, value, add_to_key_list=true)
-      expiration_time ? @store.set(key, value, expiration_time) : @store.set(key, value)
-      if add_to_key_list
+    def read_from_store(key, add_to_key_list=true)
+      data = @store.get(key)
+      # this is to prevent a situation where the cached key list forgets
+      # about keys that are actually cached.
+      if data && add_to_key_list
         @cached_key_list.add_key(key)
       end
+      data
+    end
+    
+    def write_to_store(key, value)
+      expiration_time ? @store.set(key, value, expiration_time) : @store.set(key, value)
+      @cached_key_list.add_key(key)
     end
 
     def delete_from_store(key)
