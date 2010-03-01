@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cache_advance}
-  s.version = "1.1.4"
+  s.version = "1.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aubrey Holland"]
-  s.date = %q{2009-10-21}
+  s.date = %q{2010-03-01}
   s.description = %q{hmm}
   s.email = %q{aubreyholland@gmail.com}
   s.extra_rdoc_files = [
@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/aub/cache_advance/tree/master}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{A declarative system for caching with ActiveRecord}
   s.test_files = [
     "test/active_record_sweeper_test.rb",
