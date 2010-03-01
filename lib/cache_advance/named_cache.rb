@@ -70,28 +70,48 @@ module CacheAdvance
     protected
         
     def read_from_store(key, add_to_key_list=true)
-      data = @store.get(key)
-      # this is to prevent a situation where the cached key list forgets
-      # about keys that are actually cached.
-      if data && add_to_key_list
-        @cached_key_list.add_key(key)
+      begin
+        data = @store.get(key)
+        # this is to prevent a situation where the cached key list forgets
+        # about keys that are actually cached.
+        if data && add_to_key_list
+          @cached_key_list.add_key(key)
+        end
+        data
+      rescue MemCache::MemCacheError, Errno::ECONNREFUSED => exception
+        log_memcache_error(exception)
+        nil
       end
-      data
     end
     
     def write_to_store(key, value)
-      expiration_time ? @store.set(key, value, expiration_time) : @store.set(key, value)
-      @cached_key_list.add_key(key)
+      begin
+        expiration_time ? @store.set(key, value, expiration_time) : @store.set(key, value)
+        @cached_key_list.add_key(key)
+      rescue MemCache::MemCacheError, Errno::ECONNREFUSED => exception
+        log_memcache_error(exception)
+        nil
+      end
     end
 
     def delete_from_store(key)
-      @store.delete(key)
-      @cached_key_list.delete_key(key)
+      begin
+        @store.delete(key)
+        @cached_key_list.delete_key(key)
+      rescue MemCache::MemCacheError, Errno::ECONNREFUSED => exception
+        log_memcache_error(exception)
+        nil
+      end
     end
         
     def delete_all_from_store
-      @cached_key_list.all_keys.each { |key| delete_from_store(key) }
-      @cached_key_list.clear
+      begin
+        @cached_key_list.all_keys.each { |key| delete_from_store(key) }
+        @cached_key_list.clear
+      rescue MemCache::MemCacheError, Errno::ECONNREFUSED => exception
+        log_memcache_error(exception)
+        nil
+      end
     end
         
     def each_plugin
@@ -119,6 +139,12 @@ module CacheAdvance
     
     def qualifiers
       Array(@params[:qualifiers])
+    end
+
+    def log_memcache_error(exception)
+      if defined?(Rails) && Rails.respond_to?(:logger)
+        Rails.logger.error(exception.message)
+      end
     end
   end
 end
