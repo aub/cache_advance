@@ -9,7 +9,6 @@ module CacheAdvance
     end
     
     def setup_complete
-      
     end
     
     def apply(cache_name, request, options, &block)
@@ -38,20 +37,6 @@ module CacheAdvance
     
     def define_caches
       yield Mapper.new(self)
-    end
-    
-    def create_sweepers
-      @sweeper_type.initialize_observed(@named_caches.values.map { |c| c.expiration_types }.flatten.compact.uniq)
-    end
-    
-    def expire_for_class(class_name)
-      @named_caches.values.each do |named_cache|
-        named_cache.expire_for(class_name)
-      end
-    end
-    
-    def sweeper_type=(type)
-      @sweeper_type = type
     end
   end
 end
