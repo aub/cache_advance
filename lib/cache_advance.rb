@@ -1,4 +1,4 @@
-%w( cache_set cached_key_list lock mapper named_cache named_cache_configuration).each do |file|
+%w(cache_set mapper named_cache).each do |file|
   require File.join(File.dirname(__FILE__), 'cache_advance', file)
 end
 
